@@ -17,36 +17,41 @@ export default function Home() {
   );
 
   return (
-    <div className="p-4 mt-20 bg-gray-100 min-h-screen">
-      <h1 className="text-5xl font-extrabold text-blue-800 text-center mb-6">
-        Welcome to E-Shop!
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8 pt-24 pb-32">
+      <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 text-center mb-12 animate-fade-in">
+        Welcome to GikiFy!
       </h1>
 
       {/* Search bar */}
-      <SearchBar value={searchTerm} onChange={setSearchTerm} />
+      <div className="max-w-2xl mx-auto mb-12">
+        <SearchBar value={searchTerm} onChange={setSearchTerm} />
+      </div>
 
       {/* Conditionally render no-results message or product grid */}
       {filtered.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10">
+        <p className="text-center text-gray-600 mt-16 text-xl font-light animate-fade-in">
           No products match your search.
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map(product => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          {filtered.map((product, index) => (
             <div
               key={product.id}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all"
+              className="group bg-white backdrop-blur-sm bg-opacity-80 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <img
-                src={product.image_url}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-              <h3 className="text-xl font-semibold text-blue-800 mb-2">
+              <div className="relative overflow-hidden rounded-xl mb-6">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3">
                 {product.name}
               </h3>
-              <p className="text-gray-600 mb-4">{product.description}</p>
-              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all">
+              <p className="text-gray-600 mb-6 line-clamp-2">{product.description}</p>
+              <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transform transition-all duration-300 hover:shadow-lg">
                 Add to Cart
               </button>
             </div>
