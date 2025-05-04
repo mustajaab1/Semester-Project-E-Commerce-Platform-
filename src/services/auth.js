@@ -1,32 +1,78 @@
-import api from './api';
-
-// Temporary test credentials (REMOVE IN PRODUCTION)
-const TEST_CREDENTIALS = {
-  email: 'mustajaabx@gmail.com',
-  password: 'password123'
-};
-
 export const auth = {
-  login: async (email, password) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Test users database
+    testUsers: [
+      {
+        id: 1,
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User',
+        role: 'user'
+      },
+      {
+        id: 2,
+        email: 'admin@example.com',
+        password: 'admin123',
+        name: 'Admin User',
+        role: 'admin'
+      },
+      {
+        id: 3,
+        email: 'seller@example.com',
+        password: 'seller123',
+        name: 'Seller User',
+        role: 'seller'
+      },
+      {
+        id: 4,
+        email: 'mustajaabx@gmail.com',
+        password: 'giki2023',
+        name: 'Mustajaab',
+        role: 'user'
+      }
+    ],
 
-    // For testing purposes only - replace with real API call
-    if (email === TEST_CREDENTIALS.email && password === TEST_CREDENTIALS.password) {
-      const fakeToken = 'fake-jwt-token';
-      localStorage.setItem('token', fakeToken);
-      return true;
+    login: async (email, password) => {
+      try {
+        const user = auth.testUsers.find(
+          user => user.email === email && user.password === password
+        );
+
+        if (user) {
+          const mockResponse = {
+            token: `fake-jwt-token-${user.id}`,
+            user: {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role
+            }
+          };
+          localStorage.setItem('token', mockResponse.token);
+          localStorage.setItem('user', JSON.stringify(mockResponse.user));
+          return mockResponse;
+        }
+        throw new Error('Invalid credentials');
+      } catch (error) {
+        console.error('Login failed:', error);
+        throw error;
+      }
+    },
+  
+    logout: () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    },
+  
+    isAuthenticated: () => {
+      const token = localStorage.getItem('token');
+      console.log('Checking token:', token); // Debug line
+      return !!token;
+    },
+
+    getCurrentUser: () => {
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
     }
-    return false;
-  },
-
-  logout: () => {
-    localStorage.removeItem('token');
-  },
-
-  isAuthenticated: () => {
-    return !!localStorage.getItem('token');
-  }
-};
-
-export default auth;
+  };
+  
+  export default auth;

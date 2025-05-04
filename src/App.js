@@ -1,44 +1,72 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/header'; // Import Header
-import Home from './pages/Home';  // Create Home page component
-import Cart from './pages/Cart';  // Create Cart page component
-import Profile from './pages/Profile';  // Create Profile page component
-import Login from './pages/Login'; // Add this import
-import ProtectedRoute from './components/ProtectedRoute'; // Add this import
+// import Header from './components/header'; // Comment this out
+import TestHeader from './components/TestHeader'; // Use this instead
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import Signup from './pages/Signup';
+import ProductManagement from './pages/ProductManagement';
+import AdminDashboard from './pages/AdminDashboard';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
-    <Router>
-      <Header />  {/* Add Header to all pages */}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+    <CartProvider>
+      <Router>
+        <div style={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
+          <TestHeader />
+          <div style={{ paddingTop: '80px' }}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <Cart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-products"
+                element={
+                  <ProtectedRoute>
+                    <ProductManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    </CartProvider>
   );
 }
 
