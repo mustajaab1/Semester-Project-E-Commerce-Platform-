@@ -18,6 +18,7 @@ export default function TestHeader() {
   const navItems = [
     { path: '/', label: 'Home' },
     { path: '/cart', label: 'Cart', showCount: true },
+    { path: '/orders', label: 'Order History' },
     { path: '/profile', label: 'Profile' },
     ...(isAdmin ? [{ path: '/admin', label: 'Admin Dashboard' }] : [])
   ];

@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Signup from './pages/Signup';
 import ProductManagement from './pages/ProductManagement';
 import AdminDashboard from './pages/AdminDashboard';
+import OrderHistory from './pages/OrderHistory';
 import { CartProvider } from './context/CartContext';
 
 function App() {
@@ -43,6 +44,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <OrderHistory />
                   </ProtectedRoute>
                 }
               />
