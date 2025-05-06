@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import ProductManagement from './pages/ProductManagement';
 import AdminDashboard from './pages/AdminDashboard';
 import OrderHistory from './pages/OrderHistory';
+import ProductDetail from './pages/ProductDetail';
 import { CartProvider } from './context/CartContext';
 
 function App() {
@@ -28,6 +29,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/product/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProductDetail />
                   </ProtectedRoute>
                 }
               />

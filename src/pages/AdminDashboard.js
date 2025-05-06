@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const [adminPassword, setAdminPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('products');
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     // Check if user is admin
@@ -116,6 +117,14 @@ export default function AdminDashboard() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleViewProduct = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const closeProductModal = () => {
+    setSelectedProduct(null);
   };
 
   if (!api.isAdmin()) {
@@ -233,46 +242,56 @@ export default function AdminDashboard() {
                   {products.map((product) => (
                     <tr key={product.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                        <div className="text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600" onClick={() => handleViewProduct(product)}>
+                          {product.name}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">${product.price.toFixed(2)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {editingProduct?.id === product.id ? (
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="number"
-                              value={newPrice}
-                              onChange={(e) => setNewPrice(e.target.value)}
-                              className="w-24 px-2 py-1 border rounded"
-                              step="0.01"
-                              min="0"
-                            />
-                            <button
-                              onClick={handleSavePrice}
-                              className="text-green-600 hover:text-green-900"
-                            >
-                              Save
-                            </button>
-                            <button
-                              onClick={() => {
-                                setEditingProduct(null);
-                                setNewPrice('');
-                              }}
-                              className="text-gray-600 hover:text-gray-900"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
+                        <div className="flex space-x-2">
                           <button
-                            onClick={() => handleEditClick(product)}
+                            onClick={() => handleViewProduct(product)}
                             className="text-blue-600 hover:text-blue-900"
                           >
-                            Edit Price
+                            View Details
                           </button>
-                        )}
+                          {editingProduct?.id === product.id ? (
+                            <div className="flex items-center space-x-2">
+                              <input
+                                type="number"
+                                value={newPrice}
+                                onChange={(e) => setNewPrice(e.target.value)}
+                                className="w-24 px-2 py-1 border rounded"
+                                step="0.01"
+                                min="0"
+                              />
+                              <button
+                                onClick={handleSavePrice}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingProduct(null);
+                                  setNewPrice('');
+                                }}
+                                className="text-gray-600 hover:text-gray-900"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleEditClick(product)}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              Edit Price
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -332,6 +351,64 @@ export default function AdminDashboard() {
           </div>
         )}
       </div>
+
+      {/* Product Details Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-4/5 max-w-3xl shadow-lg rounded-md bg-white">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold text-gray-900">{selectedProduct.name}</h3>
+              <button
+                onClick={closeProductModal}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                {selectedProduct.image && (
+                  <img
+                    src={selectedProduct.image}
+                    alt={selectedProduct.name}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                )}
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-700">Description</h4>
+                  <p className="text-gray-600">{selectedProduct.description}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-700">Price</h4>
+                  <p className="text-gray-600">${selectedProduct.price.toFixed(2)}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-700">Category</h4>
+                  <p className="text-gray-600">{selectedProduct.category}</p>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-700">Stock</h4>
+                  <p className="text-gray-600">{selectedProduct.stock || 'N/A'}</p>
+                </div>
+                {selectedProduct.specifications && (
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-700">Specifications</h4>
+                    <ul className="list-disc list-inside text-gray-600">
+                      {Object.entries(selectedProduct.specifications).map(([key, value]) => (
+                        <li key={key}>{`${key}: ${value}`}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
