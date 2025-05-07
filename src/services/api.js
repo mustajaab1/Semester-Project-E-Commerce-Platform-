@@ -166,13 +166,13 @@ export const api = {
         const orders = getOrders();
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         
-        // If admin, return all orders
-        if (user.role === 'admin') {
-          resolve(orders);
+        // If not admin, throw error
+        if (user.role !== 'admin') {
+          throw new Error('Access denied. Admin privileges required.');
         }
         
-        // If regular user, return only their orders
-        resolve(orders.filter(order => order.userId === user.id));
+        // Only return orders if user is admin
+        resolve(orders);
       }, 500);
     });
   },
