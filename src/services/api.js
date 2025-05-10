@@ -35,6 +35,70 @@ const initialProducts = [
     price: 79.99,
     image_url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
     category: "Appliances"
+  },
+  {
+    id: 5,
+    name: "Professional Camera",
+    description: "24MP DSLR camera with 4K video recording",
+    price: 899.99,
+    image_url: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
+    category: "Electronics"
+  },
+  {
+    id: 6,
+    name: "Yoga Mat",
+    description: "Premium eco-friendly yoga mat with carrying strap",
+    price: 29.99,
+    image_url: "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=800&q=80",
+    category: "Sports"
+  },
+  {
+    id: 7,
+    name: "Blender",
+    description: "High-speed blender with multiple settings",
+    price: 89.99,
+    image_url: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=800&q=80",
+    category: "Appliances"
+  },
+  {
+    id: 8,
+    name: "Running Shoes",
+    description: "Lightweight running shoes with cushioned soles",
+    price: 119.99,
+    image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+    category: "Sports"
+  },
+  {
+    id: 9,
+    name: "Desk Lamp",
+    description: "Adjustable LED desk lamp with multiple brightness levels",
+    price: 39.99,
+    image_url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
+    category: "Home"
+  },
+  {
+    id: 10,
+    name: "Backpack",
+    description: "Water-resistant backpack with laptop compartment",
+    price: 59.99,
+    image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
+    category: "Accessories"
+  },
+  {
+    id: 11,
+    name: "Wireless Mouse",
+    description: "Ergonomic wireless mouse with long battery life",
+    price: 49.99,
+    image_url: "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=800&q=80",
+    category: "Electronics"
+  },
+  {
+    id: 12,
+    name: "Plant Pot Set",
+    description: "Set of 3 ceramic plant pots with drainage holes",
+    price: 34.99,
+    image_url: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=80",
+    category: "Home"
   }
 ];
 
