@@ -5,7 +5,7 @@ import api from '../services/api';
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -28,7 +28,7 @@ export default function Signup() {
 
     try {
       const response = await api.signup({
-        name: formData.name,
+        username: formData.username,
         email: formData.email,
         password: formData.password
       });
@@ -103,7 +103,7 @@ export default function Signup() {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Name Input */}
+          {/* Username Input */}
           <div style={{ marginBottom: '20px' }}>
             <label className="input-label" style={{
               display: 'block',
@@ -112,12 +112,12 @@ export default function Signup() {
               fontSize: '14px',
               fontWeight: '500'
             }}>
-              Full Name
+              Username
             </label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               style={{
                 width: '100%',
@@ -127,10 +127,10 @@ export default function Signup() {
                 outline: 'none',
                 transition: 'all 0.3s ease',
                 fontSize: '15px',
-                boxShadow: isHovered === 'name' ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : 'none',
-                borderColor: isHovered === 'name' ? '#3B82F6' : '#E5E7EB'
+                boxShadow: isHovered === 'username' ? '0 0 0 3px rgba(59, 130, 246, 0.1)' : 'none',
+                borderColor: isHovered === 'username' ? '#3B82F6' : '#E5E7EB'
               }}
-              onFocus={() => setIsHovered('name')}
+              onFocus={() => setIsHovered('username')}
               onBlur={() => setIsHovered('')}
               required
             />

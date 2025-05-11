@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
-      
+      const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
       if (existingItem) {
         return prevItems.map((item) =>
           item.id === product.id
@@ -16,8 +16,7 @@ export const CartProvider = ({ children }) => {
             : item
         );
       }
-      
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...product, price, quantity: 1 }];
     });
   };
 
@@ -49,6 +48,10 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -57,6 +60,7 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         getCartTotal,
+        clearCart,
       }}
     >
       {children}
