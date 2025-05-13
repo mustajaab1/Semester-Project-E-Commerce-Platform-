@@ -20,7 +20,12 @@ export default function Home() {
     // Check if user is authenticated and is admin
     const user = auth.getCurrentUser();
     setIsAdmin(user && user.role === 'admin');
-    api.fetchProducts().then(setProducts);
+    api.fetchProducts().then(products => {
+      setProducts(products.map(p => ({
+        ...p,
+        id: p.id || p.product_id // normalize id
+      })));
+    });
   }, []);
 
   const filtered = products.filter(p =>

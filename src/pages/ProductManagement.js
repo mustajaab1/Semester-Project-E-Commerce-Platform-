@@ -7,7 +7,12 @@ export default function ProductManagement() {
   const [newPrice, setNewPrice] = useState('');
 
   useEffect(() => {
-    api.fetchProducts().then(setProducts);
+    api.fetchProducts().then(products => {
+      setProducts(products.map(p => ({
+        ...p,
+        id: p.id || p.product_id // normalize id
+      })));
+    });
   }, []);
 
   const handleEditClick = (product) => {

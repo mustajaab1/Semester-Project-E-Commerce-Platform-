@@ -366,21 +366,11 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
 });
 
 // Review endpoints
-app.post('/api/reviews', authenticateToken, async (req, res) => {
-  try {
-    const { product_id, rating, comment } = req.body;
-    const result = await pool.query(
-      'INSERT INTO reviews (user_id, product_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *',
-      [req.user.userId, product_id, rating, comment]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error adding review:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 app.get('/api/products/:id/reviews', async (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  if (isNaN(productId)) {
+    return res.status(400).json({ error: 'Invalid product ID' });
+  }
   try {
     const result = await pool.query(
       `SELECT r.*, u.username 
@@ -388,11 +378,39 @@ app.get('/api/products/:id/reviews', async (req, res) => {
        JOIN users u ON r.user_id = u.user_id 
        WHERE r.product_id = $1 
        ORDER BY r.created_at DESC`,
-      [req.params.id]
+      [productId]
     );
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching reviews:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/products/:id/reviews', authenticateToken, async (req, res) => {
+  const product_id = parseInt(req.params.id, 10);
+  const user_id = req.user.userId;
+  const { rating, comment } = req.body;
+  console.log('Review POST:', { product_id, user_id, rating, comment });
+
+  if (isNaN(product_id)) {
+    return res.status(400).json({ error: 'Invalid product ID' });
+  }
+  const parsedRating = parseInt(rating, 10);
+  if (isNaN(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+    return res.status(400).json({ error: 'Rating must be an integer between 1 and 5' });
+  }
+  if (!comment || typeof comment !== 'string' || comment.trim().length === 0) {
+    return res.status(400).json({ error: 'Comment is required' });
+  }
+  try {
+    const result = await pool.query(
+      'INSERT INTO reviews (user_id, product_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *',
+      [user_id, product_id, parsedRating, comment.trim()]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error adding review:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

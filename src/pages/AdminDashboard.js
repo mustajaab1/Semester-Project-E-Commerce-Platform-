@@ -63,9 +63,10 @@ export default function AdminDashboard() {
         api.fetchProducts(),
         api.fetchOrders()
       ]);
-      // Ensure price is a number for all products
+      // Ensure price is a number for all products and normalize id
       setProducts(productsData.map(p => ({
         ...p,
+        id: p.id || p.product_id, // normalize id
         price: typeof p.price === 'string' ? parseFloat(p.price) : p.price
       })));
       setOrders(ordersData);
