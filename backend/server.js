@@ -365,6 +365,28 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
   }
 });
 
+app.put('/api/orders/:orderId/status', authenticateToken, isAdmin, async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+  const allowedStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Invalid status value' });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE orders SET status = $1 WHERE order_id = $2 RETURNING *',
+      [status, orderId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Review endpoints
 app.get('/api/products/:id/reviews', async (req, res) => {
   const productId = parseInt(req.params.id, 10);
@@ -411,6 +433,52 @@ app.post('/api/products/:id/reviews', authenticateToken, async (req, res) => {
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error adding review:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/profile', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const { username, email, password } = req.body;
+  let updateFields = [];
+  let updateValues = [];
+
+  if (username) {
+    updateFields.push('username');
+    updateValues.push(username);
+  }
+  if (email) {
+    updateFields.push('email');
+    updateValues.push(email);
+  }
+  if (password) {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+    updateFields.push('password');
+    updateValues.push(passwordHash);
+  }
+
+  if (updateFields.length === 0) {
+    return res.status(400).json({ error: 'No fields to update' });
+  }
+
+  // Build the SET clause dynamically
+  const setClause = updateFields.map((field, idx) => `${field} = $${idx + 1}`).join(', ');
+  try {
+    const result = await pool.query(
+      `UPDATE users SET ${setClause} WHERE user_id = $${updateFields.length + 1} RETURNING user_id, username, email, role`,
+      [...updateValues, userId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ user: result.rows[0] });
+  } catch (error) {
+    if (error.code === '23505') {
+      // Unique violation (e.g., email already exists)
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+    console.error('Error updating profile:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

@@ -55,7 +55,7 @@ export default function Home() {
         });
         return;
       }
-      navigate('/admin/orders');
+      navigate('/admin');
     } catch (error) {
       setNotification({
         message: error.message || 'Access denied. Admin privileges required.',
@@ -71,10 +71,10 @@ export default function Home() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 mb-4">
-            Welcome to GikiFy
+            Welcome to
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Giki's Marketplace.
+            Giki's first ever Marketplace.
           </p>
           {isAdmin && (
             <button

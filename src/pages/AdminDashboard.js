@@ -69,7 +69,10 @@ export default function AdminDashboard() {
         id: p.id || p.product_id, // normalize id
         price: typeof p.price === 'string' ? parseFloat(p.price) : p.price
       })));
-      setOrders(ordersData);
+      setOrders(ordersData.map(order => ({
+        ...order,
+        total: typeof order.total === 'string' ? parseFloat(order.total) : order.total
+      })));
     } catch (error) {
       setNotification({
         message: 'Failed to load data. Please try again.',
